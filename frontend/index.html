@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusion Fest • Event Services Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0a0e27;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.navbar {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.navbar-brand {
+  font-size: 1.8rem;
+  color: #a8e6cf;
+  font-weight: 700;
+  cursor: pointer;
+}
+.navbar-menu {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  list-style: none;
+}
+.navbar-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.navbar-menu a:hover {
+  color: #a8e6cf;
+  background: rgba(255,255,255,0.05);
+}
+.navbar-menu a.active {
+  color: #ffd369;
+  background: rgba(255,211,105,0.1);
+}
+.user-display {
+  color: #ffd369;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: rgba(255,211,105,0.1);
+  border-radius: 8px;
+}
+
+.search-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+.search-bar {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 25px;
+  padding: 1rem 1.5rem;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+.search-bar:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255,255,255,0.12);
+}
+
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+}
+.hero-title {
+  font-size: 3.5rem;
+  color: #a8e6cf;
+  margin-bottom: 1rem;
+  animation: fadeInDown 1s;
+}
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #ffd369;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s;
+}
+
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+}
+.event-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 2px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+.event-card:hover {
+  transform: translateY(-10px);
+  border-color: #667eea;
+  box-shadow: 0 15px 35px rgba(102,126,234,0.4);
+}
+.event-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.event-title {
+  font-size: 1.3rem;
+  color: #a8e6cf;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.event-desc {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+}
+
+.auth-container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.auth-box {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 600px;
+  width: 100%;
+  border: 2px solid rgba(255,255,255,0.1);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.auth-title {
+  text-align: center;
+  color: #a8e6cf;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.auth-subtitle {
+  text-align: center;
+  color: #ffd369;
+  margin-bottom: 2rem;
+}
+.user-type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.user-type-btn {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+.user-type-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #667eea;
+}
+.user-type-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: #667eea;
+}
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-label {
+  display: block;
+  color: #a8e6cf;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 0.8rem;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255,255,255,0.08);
+}
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.form-checkbox input {
+  width: 20px;
+  height: 20px;
+}
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #ffd369;
+}
+.auth-switch a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.page-content {
+  padding: 2rem;
+}
+.page-title {
+  text-align: center;
+  color: #a8e6cf;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.page-subtitle {
+  text-align: center;
+  color: #ffd369;
+  margin-bottom: 2rem;
+}
+
+.category-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.nav-btn {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+.nav-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: #667eea;
+}
+
+.vendor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.vendor-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.15);
+  transition: all 0.3s;
+}
+.vendor-card:hover {
+  transform: translateY(-5px);
+  border-color: #667eea;
+  box-shadow: 0 15px 35px rgba(102,126,234,0.3);
+}
+.vendor-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+.vendor-info {
+  padding: 1.5rem;
+}
+.vendor-name {
+  font-size: 1.4rem;
+  color: #a8e6cf;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+.vendor-category {
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+.vendor-description {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.vendor-contact {
+  background: rgba(255,255,255,0.05);
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+.vendor-contact div {
+  margin-bottom: 0.3rem;
+  color: rgba(255,255,255,0.9);
+}
+.vendor-contact div:last-child {
+  margin-bottom: 0;
+}
+.vendor-travel {
+  background: rgba(255, 211, 105, 0.1);
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #ffd369;
+}
+.vendor-price {
+  color: #ffd369;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.vendor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.btn {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+.btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+.btn-secondary {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 2000;
+  overflow-y: auto;
+  padding: 2rem;
+}
+.modal-content {
+  background: rgba(10,14,39,0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.close-btn {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  float: right;
+  transition: all 0.3s;
+}
+.close-btn:hover {
+  transform: rotate(90deg);
+}
+.portfolio-section {
+  margin-top: 2rem;
+  clear: both;
+}
+.portfolio-title {
+  color: #a8e6cf;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.5rem;
+}
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.portfolio-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.portfolio-item:hover {
+  transform: scale(1.05);
+  border-color: #667eea;
+}
+.portfolio-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+.item-name {
+  font-weight: 600;
+  color: #a8e6cf;
+  margin-bottom: 0.5rem;
+}
+.item-price {
+  color: #ffd369;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.cart-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  cursor: pointer;
+  font-weight: 600;
+  z-index: 999;
+  transition: all 0.3s;
+}
+.cart-widget:hover {
+  transform: scale(1.1);
+}
+
+.booking-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.booking-id {
+  color: #a8e6cf;
+  font-weight: 700;
+}
+.booking-status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.status-pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+.status-confirmed {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+.status-paid {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+.payment-form {
+  max-width: 500px;
+  margin: 2rem auto;
+}
+.card-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 0.8rem;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  color: #a8e6cf;
+  font-size: 1.5rem;
+  padding: 3rem;
+}
+.hidden { display: none !important; }
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="mainNavbar">
+  <div class="navbar-brand" onclick="showPage('home')">🎉 Fusion Fest</div>
+  <ul class="navbar-menu" id="navbarMenu">
+    <li><a onclick="showPage('home')" class="active">Home</a></li>
+    <li><a onclick="showPage('services')">Services</a></li>
+    <li><a onclick="showPage('bookings')" class="hidden" id="bookingsLink">My Bookings</a></li>
+    <li><a onclick="showPage('cart')">Cart</a></li>
+    <li><a onclick="showPage('help')">Help</a></li>
+    <li class="user-display hidden" id="navUserDisplay">Guest</li>
+    <li><a onclick="handleLogout()" class="hidden" id="logoutLink">Logout</a></li>
+    <li><a onclick="showAuthPage('login')" id="loginLink">Login</a></li>
+    <li><a onclick="showAuthPage('register')" id="registerLink">Register</a></li>
+  </ul>
+</nav>
+
+<div id="homePage" class="page-content">
+  <div class="hero-section">
+    <h1 class="hero-title">Welcome to Fusion Fest</h1>
+    <p class="hero-subtitle">Your One-Stop Solution for All Event Services</p>
+  </div>
+
+  <div class="event-cards">
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🎂</div>
+      <div class="event-title">Birthday</div>
+      <div class="event-desc">Make birthdays memorable with our complete services</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">💒</div>
+      <div class="event-title">Wedding</div>
+      <div class="event-desc">Perfect your special day with professional vendors</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">💼</div>
+      <div class="event-title">Corporate Events</div>
+      <div class="event-desc">Professional services for business gatherings</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🎭</div>
+      <div class="event-title">Social Events</div>
+      <div class="event-desc">Celebrate life's special moments in style</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🎨</div>
+      <div class="event-title">Cultural Events</div>
+      <div class="event-desc">Traditional celebrations with authentic touch</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🕉️</div>
+      <div class="event-title">Religious Events</div>
+      <div class="event-desc">Sacred ceremonies with respect and care</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🎉</div>
+      <div class="event-title">Party</div>
+      <div class="event-desc">Fun-filled parties for every occasion</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🏆</div>
+      <div class="event-title">Award Ceremony</div>
+      <div class="event-desc">Elegant setups for recognition events</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">🎵</div>
+      <div class="event-title">Concert</div>
+      <div class="event-desc">Entertainment services for music events</div>
+    </div>
+    <div class="event-card" onclick="navigateToServices()">
+      <div class="event-icon">✨</div>
+      <div class="event-title">Customized Events</div>
+      <div class="event-desc">Tailored solutions for unique celebrations</div>
+    </div>
+  </div>
+</div>
+
+<div id="loginPage" class="auth-container hidden">
+  <div class="auth-box">
+    <h1 class="auth-title">🎉 Fusion Fest</h1>
+    <p class="auth-subtitle">Login to Continue</p>
+    
+    <div class="user-type-selector">
+      <button type="button" class="user-type-btn active" id="loginCustomerBtn" onclick="selectLoginType('customer')">Customer</button>
+      <button type="button" class="user-type-btn" id="loginVendorBtn" onclick="selectLoginType('vendor')">Vendor</button>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">Username or Email</label>
+        <input type="text" name="username" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-input" required>
+      </div>
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+
+    <div class="auth-switch">
+      Don't have an account? <a onclick="showAuthPage('register')">Register</a>
+    </div>
+  </div>
+</div>
+
+<div id="registerPage" class="auth-container hidden">
+  <div class="auth-box">
+    <h1 class="auth-title">🎉 Fusion Fest</h1>
+    <p class="auth-subtitle">Create Account</p>
+    
+    <div class="user-type-selector">
+      <button type="button" class="user-type-btn active" id="regCustomerBtn" onclick="selectRegisterType('customer')">Customer</button>
+      <button type="button" class="user-type-btn" id="regVendorBtn" onclick="selectRegisterType('vendor')">Vendor</button>
+    </div>
+
+    <form id="customerRegisterForm" onsubmit="handleRegister(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" name="firstName" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" name="lastName" class="form-input" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" name="phone" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-input" required>
+      </div>
+      <button type="submit" class="btn-primary">Register as Customer</button>
+    </form>
+
+    <form id="vendorRegisterForm" class="hidden" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label class="form-label">Business Name *</label>
+        <input type="text" name="name" class="form-input" required minlength="3" maxlength="100" pattern="[a-zA-Z0-9\s&'-]+" title="Only letters, numbers, spaces, &, ', and - allowed">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select name="category" class="form-select" required>
+          <option value="">Select Category</option>
+          <option value="Decoration">Decoration</option>
+          <option value="Catering">Catering</option>
+          <option value="Bakery">Bakery</option>
+          <option value="Photography">Photography</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Mehendi">Mehendi Artist</option>
+          <option value="Venue">Venue</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input type="email" name="email" class="form-input" required maxlength="100" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone (10 digits) *</label>
+          <input type="tel" name="phone" class="form-input" pattern="[6-9][0-9]{9}" required title="Phone number must start with 6-9 and be 10 digits" maxlength="10" placeholder="98XXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp (10 digits)</label>
+          <input type="tel" name="whatsapp" class="form-input" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="98XXXXXXXX" title="WhatsApp must start with 6-9 and be 10 digits">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City *</label>
+          <input type="text" name="city" class="form-input" required minlength="2" maxlength="50" pattern="[a-zA-Z\s]+" title="Only letters and spaces allowed" placeholder="Chennai">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Area/Locality *</label>
+          <input type="text" name="area" class="form-input" required minlength="2" maxlength="100" pattern="[a-zA-Z0-9\s,.-]+" title="Only letters, numbers, spaces, commas, dots, and hyphens allowed" placeholder="T Nagar">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description (Min 20 characters) *</label>
+        <textarea name="description" class="form-textarea" required minlength="20" maxlength="500" placeholder="Describe your services, specialties, and experience..."></textarea>
+        <small style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Characters: <span id="descCharCount">0</span>/500</small>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Starting Price (₹) *</label>
+        <input type="number" name="price" class="form-input" required min="100" max="10000000" step="50" placeholder="5000" title="Price must be between ₹100 and ₹1,00,00,000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Profile Image URL *</label>
+        <input type="url" name="image" class="form-input" required pattern="https?://.+" title="Must be a valid URL starting with http:// or https://" placeholder="https://example.com/image.jpg">
+      </div>
+      <div class="form-checkbox">
+        <input type="checkbox" name="openToTravel" id="openToTravel" onchange="toggleTravelFields()">
+        <label for="openToTravel">Open to Travel</label>
+      </div>
+      <div id="travelFields" class="hidden">
+        <div class="form-group">
+          <label class="form-label">Travel Locations (comma separated) *</label>
+          <input type="text" name="travelLocations" class="form-input" placeholder="Chennai, Bangalore, Hyderabad" pattern="[a-zA-Z\s,]+" title="Only letters, spaces, and commas allowed">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Travel Charges (₹) *</label>
+          <input type="number" name="travelCharges" class="form-input" min="0" max="100000" step="100" placeholder="2000">
+        </div>
+      </div>
+      
+      <div style="border-top: 2px solid rgba(255,255,255,0.2); margin: 2rem 0; padding-top: 2rem;">
+        <h3 style="color: #a8e6cf; margin-bottom: 1rem;">Portfolio/Works *</h3>
+        <div class="form-group">
+          <label class="form-label">Number of Works to Upload (1-10) *</label>
+          <input type="number" id="numWorksInput" class="form-input" min="1" max="10" value="3" onchange="generateWorkFields()" required>
+        </div>
+        <div id="worksContainer"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Username (4-20 characters, letters & numbers only) *</label>
+        <input type="text" name="username" class="form-input" required minlength="4" maxlength="20" pattern="[a-zA-Z0-9]+" title="Only letters and numbers, 4-20 characters" placeholder="myvendor123">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password (min 6 characters) *</label>
+        <input type="password" name="password" id="vendorPassword" class="form-input" required minlength="6" maxlength="50" placeholder="••••••">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password *</label>
+        <input type="password" name="confirmPassword" id="vendorConfirmPassword" class="form-input" required minlength="6" maxlength="50" placeholder="••••••">
+        <small id="passwordMatch" style="color: #ff6b6b; font-size: 0.85rem; display: none;">Passwords do not match!</small>
+      </div>
+      <button type="submit" class="btn-primary">Register as Vendor</button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a onclick="showAuthPage('login')">Login</a>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp">
+  
+  <div id="servicesPage" class="page-content hidden">
+    <h1 class="page-title">Event Services</h1>
+    <p class="page-subtitle">Browse and book vendors for your event</p>
+    
+    <div class="search-container">
+      <input type="text" class="search-bar" id="searchBar" placeholder="🔍 Search by vendor name or service..." oninput="searchVendors()">
+    </div>
+    
+    <div class="category-nav">
+      <button class="nav-btn active" onclick="filterCategory('all')">All Services</button>
+      <button class="nav-btn" onclick="filterCategory('Decoration')">🎈 Decorators</button>
+      <button class="nav-btn" onclick="filterCategory('Catering')">🍽️ Catering</button>
+      <button class="nav-btn" onclick="filterCategory('Bakery')">🎂 Bakers</button>
+      <button class="nav-btn" onclick="filterCategory('Photography')">📸 Photography</button>
+      <button class="nav-btn" onclick="filterCategory('Entertainment')">🎵 Entertainment</button>
+      <button class="nav-btn" onclick="filterCategory('Mehendi')">🎨 Mehendi Artists</button>
+      <button class="nav-btn" onclick="filterCategory('Venue')">🏛️ Venues</button>
+    </div>
+
+    <div class="vendor-grid" id="vendorGrid">
+      <div class="loading">Loading vendors...</div>
+    </div>
+  </div>
+
+  <div id="bookingsPage" class="page-content hidden">
+    <h1 class="page-title">My Bookings</h1>
+    <p class="page-subtitle">View and manage your bookings</p>
+    <div id="bookingsList"></div>
+  </div>
+
+  <div id="vendorProfilePage" class="page-content hidden">
+    <h1 class="page-title">My Vendor Profile</h1>
+    <p class="page-subtitle">Update your portfolio and works</p>
+    <div id="vendorProfileContent"></div>
+  </div>
+
+  <div id="cartPage" class="page-content hidden">
+    <h1 class="page-title">Shopping Cart</h1>
+    <p class="page-subtitle">Review your selections</p>
+    <div id="cartList"></div>
+  </div>
+
+  <div id="paymentPage" class="page-content hidden">
+    <h1 class="page-title">Payment</h1>
+    <p class="page-subtitle">Complete your booking</p>
+    <div id="paymentContent"></div>
+  </div>
+
+  <div id="helpPage" class="page-content hidden">
+    <h1 class="page-title">Help & Support</h1>
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="booking-card">
+        <h3 style="color: #a8e6cf; margin-bottom: 1rem;">Contact Us</h3>
+        <p>Email: support@fusionfest.com</p>
+        <p>Phone: +91 98765 43210</p>
+        <p>WhatsApp: +91 98765 43210</p>
+      </div>
+      <div class="booking-card">
+        <h3 style="color: #a8e6cf; margin-bottom: 1rem;">FAQ</h3>
+        <p><strong>How do I book a vendor?</strong><br>Browse services, view details, add items to cart, and proceed to checkout.</p>
+        <p><strong>Can I cancel my booking?</strong><br>Yes, contact us within 24 hours of booking.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-widget" onclick="showPage('cart')">
+    🛒 Cart: <span id="cartCount">0</span> | ₹<span id="cartTotal">0</span>
+  </div>
+</div>
+
+<div class="modal" id="portfolioModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const API_URL = 'http://localhost:5000/api';
+let vendors = [];
+let cart = [];
+let bookings = [];
+let currentCategory = 'all';
+let currentUser = null;
+let loginUserType = 'customer';
+let registerUserType = 'customer';
+let searchQuery = '';
+
+// Add real-time validation listeners
+document.addEventListener('DOMContentLoaded', function() {
+  generateWorkFields();
+  // Character counter for description
+  const descTextarea = document.querySelector('textarea[name="description"]');
+  if (descTextarea) {
+    descTextarea.addEventListener('input', function() {
+      const charCount = document.getElementById('descCharCount');
+      if (charCount) {
+        charCount.textContent = this.value.length;
+      }
+    });
+  }
+  
+  // Password match validation
+  const vendorPassword = document.getElementById('vendorPassword');
+  const vendorConfirmPassword = document.getElementById('vendorConfirmPassword');
+  const passwordMatch = document.getElementById('passwordMatch');
+  
+  if (vendorPassword && vendorConfirmPassword && passwordMatch) {
+    vendorConfirmPassword.addEventListener('input', function() {
+      if (this.value && vendorPassword.value !== this.value) {
+        passwordMatch.style.display = 'block';
+        this.setCustomValidity('Passwords do not match');
+      } else {
+        passwordMatch.style.display = 'none';
+        this.setCustomValidity('');
+      }
+    });
+    
+    vendorPassword.addEventListener('input', function() {
+      if (vendorConfirmPassword.value && this.value !== vendorConfirmPassword.value) {
+        passwordMatch.style.display = 'block';
+        vendorConfirmPassword.setCustomValidity('Passwords do not match');
+      } else {
+        passwordMatch.style.display = 'none';
+        vendorConfirmPassword.setCustomValidity('');
+      }
+    });
+  }
+});
+initializeSession();
+loadVendorsFromDB();
+
+initializeSession();
+loadVendorsFromDB();
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+  
+  if (registerUserType === 'customer') {
+    // Customer registration
+    const customerData = {
+      firstName: data.firstName.trim(),
+      lastName: data.lastName.trim(),
+      email: data.email.trim(),
+      phone: data.phone.trim(),
+      username: data.username.trim(),
+      password: data.password
+    };
+    
+    try {
+      const response = await fetch(`${API_URL}/customers/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customerData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Registration successful! Please login.');
+        form.reset();
+        showAuthPage('login');
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Registration failed!');
+      }
+    } catch (err) {
+      console.error('Registration error:', err);
+      alert('Registration failed! Please check your connection and ensure the backend is running.');
+    }
+  } else {
+    // Vendor registration
+    // Check password match
+    if (data.password !== data.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    
+    // Parse portfolio works
+    const numWorks = parseInt(document.getElementById('numWorksInput').value) || 3;
+    const portfolioItems = [];
+    
+    for (let i = 1; i <= numWorks; i++) {
+      const workName = data[`work_${i}_name`];
+      const workPrice = data[`work_${i}_price`];
+      const workImage = data[`work_${i}_image`];
+      
+      if (workName && workPrice && workImage) {
+        portfolioItems.push({
+          name: workName.trim(),
+          price: workPrice.trim(),
+          image: workImage.trim()
+        });
+      }
+    }
+    
+    // Build vendor data
+    const vendorData = {
+      name: data.name.trim(),
+      category: data.category,
+      email: data.email.trim(),
+      phone: data.phone.trim(),
+      whatsapp: data.whatsapp ? data.whatsapp.trim() : data.phone.trim(),
+      city: data.city.trim(),
+      area: data.area.trim(),
+      description: data.description.trim(),
+      price: parseInt(data.price),
+      image: data.image.trim(),
+      openToTravel: !!data.openToTravel,
+      travelLocations: data.openToTravel && data.travelLocations 
+        ? data.travelLocations.split(',').map(loc => loc.trim()).filter(loc => loc)
+        : [],
+      travelCharges: data.openToTravel && data.travelCharges 
+        ? parseInt(data.travelCharges) 
+        : 0,
+      username: data.username.trim(),
+      password: data.password,
+      portfolio: portfolioItems.length > 0 ? [{
+        title: data.category + ' Services',
+        menu: portfolioItems.map(item => [item.name, item.price]),
+        images: portfolioItems.map(item => item.image)
+      }] : []
+    };
+    
+    console.log('Vendor registration data:', vendorData);
+    
+    try {
+      const response = await fetch(`${API_URL}/vendors/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(vendorData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Vendor registration successful! Please login.');
+        form.reset();
+        showAuthPage('login');
+        selectLoginType('vendor'); // Switch to vendor login
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Vendor registration failed!');
+      }
+    } catch (err) {
+      console.error('Vendor registration error:', err);
+      alert('Vendor registration failed!\n\nError: ' + err.message + '\n\nPlease check:\n1. Is your backend running on http://localhost:5000?\n2. Does the backend have /api/vendors/register endpoint?\n3. Check the browser console for details');
+    }
+  }
+}
+
+function initializeSession() {
+  currentUser = null;
+  cart = [];
+  updateCart();
+  updateNavigation();
+}
+
+function navigateToServices() {
+  showPage('services');
+}
+
+function searchVendors() {
+  searchQuery = document.getElementById('searchBar').value.toLowerCase();
+  renderVendors();
+}
+
+function updateNavigation() {
+  const isLoggedIn = currentUser !== null;
+  document.getElementById('navUserDisplay').classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('logoutLink').classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('loginLink').classList.toggle('hidden', isLoggedIn);
+  document.getElementById('registerLink').classList.toggle('hidden', isLoggedIn);
+  document.getElementById('bookingsLink').classList.toggle('hidden', !isLoggedIn || currentUser.type !== 'customer');
+  
+  if (isLoggedIn) {
+    const displayName = currentUser.type === 'customer' 
+      ? currentUser.firstName + ' ' + currentUser.lastName
+      : currentUser.name;
+    document.getElementById('navUserDisplay').textContent = displayName;
+    
+    // Handle vendor profile link
+    const navbarMenu = document.getElementById('navbarMenu');
+    let existingProfile = document.getElementById('vendorProfileLink');
+    
+    if (currentUser.type === 'vendor') {
+      if (!existingProfile) {
+        const profileLi = document.createElement('li');
+        profileLi.id = 'vendorProfileLink';
+        profileLi.innerHTML = '<a onclick="showPage(\'vendorProfile\')">My Profile</a>';
+        
+        // Find the bookings link and insert after it, or before cart if bookings doesn't exist
+        const bookingsLi = document.getElementById('bookingsLink').parentElement;
+        const cartLi = document.querySelector('[onclick="showPage(\'cart\')"]').parentElement;
+        
+        if (bookingsLi && navbarMenu.contains(bookingsLi)) {
+          // Insert after bookings
+          bookingsLi.after(profileLi);
+        } else if (cartLi && navbarMenu.contains(cartLi)) {
+          // Insert before cart
+          navbarMenu.insertBefore(profileLi, cartLi);
+        } else {
+          // Fallback: append to menu
+          navbarMenu.appendChild(profileLi);
+        }
+      }
+    } else if (currentUser.type === 'customer' && existingProfile) {
+      // Remove vendor profile link if customer logs in
+      existingProfile.remove();
+    }
+  } else {
+    // Remove vendor profile link on logout
+    const existingProfile = document.getElementById('vendorProfileLink');
+    if (existingProfile) {
+      existingProfile.remove();
+    }
+  }
+}
+
+function selectLoginType(type) {
+  loginUserType = type;
+  document.getElementById('loginCustomerBtn').classList.toggle('active', type === 'customer');
+  document.getElementById('loginVendorBtn').classList.toggle('active', type === 'vendor');
+}
+
+function selectRegisterType(type) {
+  registerUserType = type;
+  document.getElementById('regCustomerBtn').classList.toggle('active', type === 'customer');
+  document.getElementById('regVendorBtn').classList.toggle('active', type === 'vendor');
+  
+  document.getElementById('customerRegisterForm').classList.toggle('hidden', type !== 'customer');
+  document.getElementById('vendorRegisterForm').classList.toggle('hidden', type !== 'vendor');
+  
+  // Regenerate work fields when switching to vendor form
+  if (type === 'vendor') {
+    setTimeout(() => generateWorkFields(), 100);
+  }
+}
+
+function toggleTravelFields() {
+  const checkbox = document.getElementById('openToTravel');
+  const fields = document.getElementById('travelFields');
+  fields.classList.toggle('hidden', !checkbox.checked);
+}
+
+function generateWorkFields() {
+  const numWorksInput = document.getElementById('numWorksInput');
+  if (!numWorksInput) {
+    console.log('numWorksInput not found yet');
+    return;
+  }
+  
+  const numWorks = Math.min(Math.max(parseInt(numWorksInput.value) || 3, 1), 10);
+  numWorksInput.value = numWorks; // Ensure value is within bounds
+  const container = document.getElementById('worksContainer');
+  
+  if (!container) {
+    console.log('worksContainer not found yet');
+    return;
+  }
+  
+  let html = '';
+  for (let i = 1; i <= numWorks; i++) {
+    html += `
+      <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; border-left: 3px solid #667eea;">
+        <h4 style="color: #ffd369; margin-bottom: 0.8rem;">Work #${i}</h4>
+        <div class="form-group">
+          <label class="form-label">Work Name/Title *</label>
+          <input type="text" name="work_${i}_name" class="form-input" required minlength="3" maxlength="100" placeholder="e.g., Chocolate Truffle Cake">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price/Cost *</label>
+          <input type="text" name="work_${i}_price" class="form-input" required minlength="2" maxlength="50" placeholder="e.g., ₹850/kg or ₹15000" pattern="[₹0-9/a-zA-Z\s]+" title="Enter price with ₹ symbol">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Image URL *</label>
+          <input type="url" name="work_${i}_image" class="form-input" required placeholder="https://example.com/image.jpg" pattern="https?://.+" title="Must be a valid URL">
+        </div>
+      </div>
+    `;
+  }
+  
+  container.innerHTML = html;
+  console.log(`Generated ${numWorks} work fields`);
+}
+function showAuthPage(page) {
+  document.getElementById('homePage').classList.add('hidden');
+  document.getElementById('servicesPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.toggle('hidden', page !== 'login');
+  document.getElementById('registerPage').classList.toggle('hidden', page !== 'register');
+  document.getElementById('cartPage').classList.add('hidden');
+  document.getElementById('helpPage').classList.add('hidden');
+  
+  document.querySelectorAll('.navbar-menu a').forEach(link => link.classList.remove('active'));
+  
+  // Initialize work fields when showing register page
+  if (page === 'register') {
+    setTimeout(() => {
+      if (registerUserType === 'vendor') {
+        generateWorkFields();
+      }
+    }, 100);
+  }
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const form = e.target;
+  const username = form.username.value.trim();
+  const password = form.password.value;
+
+  const endpoint = loginUserType === 'customer' ? 'customers' : 'vendors';
+  const loginUrl = `${API_URL}/${endpoint}/login`;
+  
+  console.log('Attempting login to:', loginUrl);
+  console.log('Login data:', { username, userType: loginUserType });
+
+  try {
+    const response = await fetch(loginUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
+    if (response.ok) {
+      const userData = await response.json();
+      console.log('Login successful, user data:', userData);
+      currentUser = { ...userData, type: loginUserType };
+      
+      if (loginUserType === 'vendor') {
+        await loadVendorsFromDB();
+      }
+      
+      form.reset();
+      updateNavigation();
+      showPage('home');
+      alert('Login successful!');
+    } else {
+      const error = await response.json();
+      console.log('Login failed, error:', error);
+      alert(error.message || 'Invalid credentials!');
+    }
+  } catch (err) {
+    console.error('Login error (catch block):', err);
+    console.error('Error name:', err.name);
+    console.error('Error message:', err.message);
+    
+    alert('Login failed!\n\nError: ' + err.message + '\n\nPlease check:\n1. Is your backend running on http://localhost:5000?\n2. Check the browser console for details');
+  }
+}
+function handleLogout() {
+  if (confirm('Are you sure you want to logout?')) {
+    initializeSession();
+    showPage('home');
+  }
+}
+
+function showPage(pageName) {
+  document.getElementById('homePage').classList.add('hidden');
+  document.getElementById('servicesPage').classList.add('hidden');
+  document.getElementById('bookingsPage').classList.add('hidden');
+  document.getElementById('cartPage').classList.add('hidden');
+  document.getElementById('helpPage').classList.add('hidden');
+  document.getElementById('vendorProfilePage').classList.add('hidden');
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('registerPage').classList.add('hidden');
+  document.getElementById('paymentPage').classList.add('hidden');
+  
+  document.querySelectorAll('.navbar-menu a').forEach(link => {
+    link.classList.remove('active');
+  });
+  
+  switch(pageName) {
+    case 'home':
+      document.getElementById('homePage').classList.remove('hidden');
+      document.querySelectorAll('.navbar-menu a')[0].classList.add('active');
+      break;
+    case 'services':
+      document.getElementById('servicesPage').classList.remove('hidden');
+      document.querySelectorAll('.navbar-menu a')[1].classList.add('active');
+      renderVendors();
+      break;
+    case 'bookings':
+      if (!currentUser || currentUser.type !== 'customer') {
+        alert('Please login as a customer to view bookings!');
+        showAuthPage('login');
+        return;
+      }
+      document.getElementById('bookingsPage').classList.remove('hidden');
+      loadBookingsFromDB();
+      break;
+    case 'cart':
+      document.getElementById('cartPage').classList.remove('hidden');
+      renderCart();
+      break;
+    case 'help':
+      document.getElementById('helpPage').classList.remove('hidden');
+      break;
+    case 'vendorProfile':
+      if (!currentUser || currentUser.type !== 'vendor') {
+        alert('Access denied!');
+        return;
+      }
+      document.getElementById('vendorProfilePage').classList.remove('hidden');
+      renderVendorProfile();
+      break;
+    case 'payment':
+      document.getElementById('paymentPage').classList.remove('hidden');
+      break;
+  }
+}
+
+function filterCategory(category) {
+  currentCategory = category;
+  document.querySelectorAll('.category-nav .nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  renderVendors();
+}
+
+function renderVendors() {
+  const grid = document.getElementById('vendorGrid');
+  let filtered = currentCategory === 'all' ? vendors : vendors.filter(v => v.category === currentCategory);
+  
+  if (searchQuery) {
+    filtered = filtered.filter(v => 
+      v.name.toLowerCase().includes(searchQuery) ||
+      v.category.toLowerCase().includes(searchQuery) ||
+      v.description.toLowerCase().includes(searchQuery)
+    );
+  }
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="loading">No vendors found.</div>';
+    return;
+  }
+  
+  grid.innerHTML = filtered.map(v => {
+    const vendorStr = JSON.stringify(v).replace(/"/g, '&quot;');
+    return `
+    <div class="vendor-card">
+      <img src="${v.image}" alt="${v.name}" class="vendor-image" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+      <div class="vendor-info">
+        <div class="vendor-name">${v.name}</div>
+        <div class="vendor-category">${v.category}</div>
+        <div class="vendor-description">${v.description}</div>
+        <div class="vendor-contact">
+          <div>📧 ${v.email}</div>
+          <div>📞 ${v.phone}</div>
+          <div>💬 ${v.whatsapp}</div>
+          <div>📍 ${v.area}, ${v.city}</div>
+        </div>
+        ${v.openToTravel ? `
+          <div class="vendor-travel">
+            ✈️ Open to travel: ${v.travelLocations.join(', ')}<br>
+            Travel charges: ₹${v.travelCharges}
+          </div>
+        ` : ''}
+        <div class="vendor-price">Starting from ₹${v.price.toLocaleString()}</div>
+        <div class="vendor-actions">
+           <button class="btn" onclick='viewPortfolio(${vendorStr})'>
+           ${v.category === 'Catering' || v.category === 'Bakery' ? 'View Menu' : 'View Works'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function viewPortfolio(vendor) {
+  const modal = document.getElementById('portfolioModal');
+  const content = document.getElementById('modalContent');
+  
+  let html = `
+    <h2 style="color: #a8e6cf; margin-bottom: 1rem;">${vendor.name}</h2>
+    <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;">${vendor.description}</p>
+    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+      <div style="margin-bottom: 0.5rem;">📧 ${vendor.email}</div>
+      <div style="margin-bottom: 0.5rem;">📞 ${vendor.phone}</div>
+      <div style="margin-bottom: 0.5rem;">💬 ${vendor.whatsapp}</div>
+      <div>📍 ${vendor.area}, ${vendor.city}</div>
+    </div>
+  `;
+  
+  if (vendor.portfolio && vendor.portfolio.length > 0) {
+    vendor.portfolio.forEach((item, portfolioIndex) => {
+      html += `<div class="portfolio-section">`;
+      html += `<div class="portfolio-title">${item.title}</div>`;
+      
+      if (vendor.category === 'Catering') {
+        const vendorStr = JSON.stringify(vendor).replace(/"/g, '&quot;');
+        html += `<div style="text-align: right; margin-bottom: 1rem;">
+          <button class="btn btn-small" onclick='addAllMenuToCart(${vendorStr}, ${portfolioIndex})'>Add All to Cart</button>
+        </div>`;
+      }
+      
+      html += `<div class="portfolio-grid">`;
+      
+      if (item.menu && item.menu.length > 0) {
+        item.menu.forEach((menuItem, menuIndex) => {
+          const imageSrc = (item.images && item.images[menuIndex]) 
+            ? item.images[menuIndex] 
+            : 'https://via.placeholder.com/250x180?text=No+Image';
+          
+          let priceDisplay = menuItem[1];
+          let priceNum = parseInt(menuItem[1].replace(/[^0-9]/g, ''));
+          
+          if (vendor.category === 'Bakery' && menuItem[1].includes('/kg')) {
+            const basePrice = priceNum;
+            const halfKgPrice = Math.round(basePrice / 2);
+            priceDisplay = `₹${halfKgPrice}/500g | ₹${basePrice}/kg`;
+            
+            html += `
+              <div class="portfolio-item">
+                <img src="${imageSrc}" alt="${menuItem[0]}" onerror="this.src='https://via.placeholder.com/250x180?text=No+Image'">
+                <div class="item-name">${menuItem[0]}</div>
+                <div class="item-price">${priceDisplay}</div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (500g)", ${halfKgPrice}); closeModal();'>Add 500g</button>
+                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (1kg)", ${basePrice}); closeModal();'>Add 1kg</button>
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="portfolio-item">
+                <img src="${imageSrc}" alt="${menuItem[0]}" onerror="this.src='https://via.placeholder.com/250x180?text=No+Image'">
+                <div class="item-name">${menuItem[0]}</div>
+                <div class="item-price">${priceDisplay}</div>
+                <button class="btn btn-small" onclick='addToCart("${menuItem[0]}", ${priceNum}); closeModal();'>Add to Cart</button>
+              </div>
+            `;
+          }
+        });
+      }
+      
+      html += `</div></div>`;
+    });
+  } else {
+    html += `<div class="portfolio-section"><p style="text-align: center; color: rgba(255,255,255,0.6);">No portfolio items available</p></div>`;
+  }
+  
+  content.innerHTML = html;
+  modal.style.display = 'block';
+}
+
+function addAllMenuToCart(vendor, portfolioIndex) {
+  if (!vendor.portfolio || !vendor.portfolio[portfolioIndex] || !vendor.portfolio[portfolioIndex].menu) {
+    alert('No menu items to add!');
+    return;
+  }
+  
+  const menu = vendor.portfolio[portfolioIndex].menu;
+  let addedCount = 0;
+  
+  menu.forEach(menuItem => {
+    const priceNum = parseInt(menuItem[1].replace(/[^0-9]/g, ''));
+    cart.push({ name: menuItem[0], price: priceNum, id: Date.now() + addedCount });
+    addedCount++;
+  });
+  
+  updateCart();
+  alert(`All ${addedCount} items added to cart!`);
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('portfolioModal').style.display = 'none';
+}
+
+function addToCart(name, price) {
+  cart.push({ name, price, id: Date.now() });
+  updateCart();
+  alert(`${name} added to cart!`);
+}
+
+function updateCart() {
+  const count = cart.length;
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = total.toLocaleString();
+}
+
+function renderCart() {
+  const cartList = document.getElementById('cartList');
+  
+  if (cart.length === 0) {
+    cartList.innerHTML = '<div class="loading">Your cart is empty</div>';
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  
+  cartList.innerHTML = `
+    <div style="max-width: 800px; margin: 0 auto;">
+      ${cart.map((item, index) => `
+        <div class="booking-card">
+          <div class="booking-header">
+            <div>
+              <div style="color: #a8e6cf; font-weight: 700; margin-bottom: 0.5rem;">${item.name}</div>
+              <div style="color: #ffd369; font-weight: 700;">₹${item.price.toLocaleString()}</div>
+            </div>
+            <button class="btn" style="flex: none; padding: 0.5rem 1rem;" onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        </div>
+      `).join('')}
+      
+      <div class="booking-card" style="background: rgba(102, 126, 234, 0.2);">
+        <div class="booking-header">
+          <div style="color: #a8e6cf; font-size: 1.3rem; font-weight: 700;">Total Amount</div>
+          <div style="color: #ffd369; font-size: 1.3rem; font-weight: 700;">₹${total.toLocaleString()}</div>
+        </div>
+        <button class="btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  `;
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCart();
+  renderCart();
+}
+
+function proceedToCheckout() {
+  if (!currentUser || currentUser.type !== 'customer') {
+    alert('Please login as a customer to proceed with booking!');
+    showAuthPage('login');
+    return;
+  }
+  
+  showPage('payment');
+  renderPaymentPage();
+}
+
+function renderPaymentPage() {
+  const content = document.getElementById('paymentContent');
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  
+  content.innerHTML = `
+    <div style="max-width: 600px; margin: 0 auto;">
+      <div class="booking-card">
+        <h3 style="color: #a8e6cf; margin-bottom: 1rem;">Order Summary</h3>
+        ${cart.map(item => `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span>${item.name}</span>
+            <span style="color: #ffd369;">₹${item.price.toLocaleString()}</span>
+          </div>
+        `).join('')}
+        <div style="border-top: 2px solid rgba(255,255,255,0.2); margin-top: 1rem; padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700;">
+          <span style="color: #a8e6cf;">Total:</span>
+          <span style="color: #ffd369;">₹${total.toLocaleString()}</span>
+        </div>
+      </div>
+      
+      <div class="booking-card">
+        <h3 style="color: #a8e6cf; margin-bottom: 1.5rem;">Payment Details</h3>
+        <form id="paymentForm" onsubmit="processPayment(event)">
+          <div class="form-group">
+            <label class="form-label">Card Number</label>
+            <input type="text" class="card-input" placeholder="1234 5678 9012 3456" pattern="[0-9]{16}" maxlength="16" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Expiry Date</label>
+              <input type="text" class="card-input" placeholder="MM/YY" pattern="[0-9]{2}/[0-9]{2}" maxlength="5" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CVV</label>
+              <input type="text" class="card-input" placeholder="123" pattern="[0-9]{3}" maxlength="3" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Pay ₹${total.toLocaleString()}</button>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+async function processPayment(e) {
+  e.preventDefault();
+  
+  const booking = {
+    bookingId: 'BK' + Date.now(),
+    customer: currentUser.username,
+    customerName: currentUser.firstName + ' ' + currentUser.lastName,
+    customerEmail: currentUser.email,
+    customerPhone: currentUser.phone,
+    items: [...cart],
+    total: cart.reduce((sum, item) => sum + item.price, 0),
+    status: 'pending'
+  };
+  
+  try {
+    const response = await fetch(`${API_URL}/bookings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(booking)
+    });
+
+    if (response.ok) {
+      const savedBooking = await response.json();
+      generateBill({
+        ...savedBooking,
+        id: savedBooking.bookingId,
+        date: new Date(savedBooking.createdAt).toLocaleDateString(),
+        time: new Date(savedBooking.createdAt).toLocaleTimeString()
+      });
+      
+      cart = [];
+      updateCart();
+    } else {
+      alert('Booking failed. Please try again.');
+    }
+  } catch (err) {
+    console.error('Booking error:', err);
+    alert('Booking failed. Please check your connection.');
+  }
+}
+
+function generateBill(booking) {
+  const billHTML = `
+    <div style="max-width: 700px; margin: 0 auto; background: white; color: black; padding: 3rem; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 2rem; border-bottom: 3px solid #667eea; padding-bottom: 1rem;">
+        <h1 style="color: #667eea; margin-bottom: 0.5rem;">🎉 FUSION FEST</h1>
+        <p style="color: #764ba2; font-weight: 600;">Event Services Platform</p>
+        <p style="font-size: 0.9rem; color: #666;">Email: support@fusionfest.com | Phone: +91 98765 43210</p>
+      </div>
+      
+      <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h2 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">INVOICE</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <p style="margin-bottom: 0.5rem;"><strong>Booking ID:</strong> ${booking.id}</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Date:</strong> ${booking.date}</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Time:</strong> ${booking.time}</p>
+          </div>
+          <div>
+            <p style="margin-bottom: 0.5rem;"><strong>Customer:</strong> ${booking.customerName}</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${booking.customerEmail}</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> ${booking.customerPhone}</p>
+          </div>
+        </div>
+      </div>
+      
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+        <thead>
+          <tr style="background: #667eea; color: white;">
+            <th style="padding: 1rem; text-align: left; border: 1px solid #ddd;">Item</th>
+            <th style="padding: 1rem; text-align: right; border: 1px solid #ddd;">Amount (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${booking.items.map(item => `
+            <tr>
+              <td style="padding: 0.8rem; border: 1px solid #ddd;">${item.name}</td>
+              <td style="padding: 0.8rem; text-align: right; border: 1px solid #ddd;">${item.price.toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+        <tfoot>
+          <tr style="background: #f5f5f5; font-weight: 700; font-size: 1.2rem;">
+            <td style="padding: 1rem; border: 1px solid #ddd;">TOTAL</td>
+            <td style="padding: 1rem; text-align: right; border: 1px solid #ddd; color: #667eea;">₹${booking.total.toLocaleString()}</td>
+          </tr>
+        </tfoot>
+      </table>
+       <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; border-left: 4px solid #4caf50; margin-bottom: 2rem;">
+          <p style="color: #2e7d32; font-weight: 600; margin-bottom: 0.5rem;">✓ Booking Successful</p>
+          <p style="color: #2e7d32; font-size: 0.9rem;">Your booking has been confirmed. Payment pending.</p>
+       </div>  
+      <div style="text-align: center; padding-top: 1rem; border-top: 2px solid #ddd;">
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Thank you for choosing Fusion Fest!</p>
+        <p style="color: #666; font-size: 0.85rem;">For any queries, contact us at support@fusionfest.com</p>
+      </div>
+    </div>
+  `;
+  
+  const modal = document.getElementById('portfolioModal');
+  const content = document.getElementById('modalContent');
+  
+  const bookingStr = JSON.stringify(booking).replace(/"/g, '&quot;');
+  content.innerHTML = `
+    ${billHTML}
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+      <button class="btn" onclick='downloadBillPDF(${bookingStr})'>Export Bill as PDF</button>
+      <button class="btn btn-secondary" onclick="closeModal(); showPage('bookings');">View My Bookings</button>
+    </div>
+  `;
+  modal.style.display = 'block';
+}
+
+function downloadBillPDF(booking) {
+  try {
+    const { jsPDF } = window.jspdf;
+    if (!jsPDF) {
+      alert('PDF library not loaded. Please refresh the page.');
+      return;
+    }
+    
+    const doc = new jsPDF();
+    
+    doc.setFontSize(24);
+    doc.setTextColor(102, 126, 234);
+    doc.text('FUSION FEST', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(118, 75, 162);
+    doc.text('Event Services Platform', 105, 28, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Email: support@fusionfest.com | Phone: +91 98765 43210', 105, 35, { align: 'center' });
+    
+    doc.setDrawColor(102, 126, 234);
+    doc.setLineWidth(0.5);
+    doc.line(20, 38, 190, 38);
+    
+    doc.setFontSize(16);
+    doc.setTextColor(102, 126, 234);
+    doc.text('INVOICE', 20, 50);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Booking ID: ' + booking.id, 20, 60);
+    doc.text('Date: ' + booking.date, 20, 67);
+    doc.text('Time: ' + booking.time, 20, 74);
+    
+    doc.text('Customer: ' + booking.customerName, 110, 60);
+    doc.text('Email: ' + booking.customerEmail, 110, 67);
+    doc.text('Phone: ' + booking.customerPhone, 110, 74);
+    
+    let yPos = 90;
+    doc.setFillColor(102, 126, 234);
+    doc.rect(20, yPos - 5, 170, 8, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.text('Item', 25, yPos);
+    doc.text('Amount (Rs)', 160, yPos);
+    
+    yPos += 10;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    
+    booking.items.forEach(item => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(item.name, 25, yPos);
+      doc.text(item.price.toLocaleString(), 185, yPos, { align: 'right' });
+      yPos += 7;
+    });
+    
+    yPos += 5;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, yPos - 3, 190, yPos - 3);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(102, 126, 234);
+    doc.text('TOTAL', 25, yPos + 3);
+    doc.text('Rs ' + booking.total.toLocaleString(), 185, yPos + 3, { align: 'right' });
+    
+    yPos += 15;
+    doc.setFillColor(232, 245, 233);
+    doc.rect(20, yPos - 5, 170, 15, 'F');
+    
+    doc.setTextColor(46, 125, 50);
+    doc.setFontSize(11);
+    doc.text('Booking Status: CONFIRMED', 25, yPos + 2);
+    doc.setFontSize(9);
+    doc.text('Payment Pending - Please complete payment at venue', 25, yPos + 8);
+    
+    yPos += 25;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, yPos, 190, yPos);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Thank you for choosing Fusion Fest!', 105, yPos + 8, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text('For any queries, contact us at support@fusionfest.com', 105, yPos + 14, { align: 'center' });
+    
+    doc.save('FusionFest_Invoice_' + booking.id + '.pdf');
+    alert('Invoice downloaded successfully!');
+    
+  } catch (error) {
+    console.error('PDF Error:', error);
+    alert('Unable to generate PDF. Error: ' + error.message);
+  }
+}
+
+async function loadBookingsFromDB() {
+  if (!currentUser) return;
+  
+  try {
+    const response = await fetch(`${API_URL}/bookings/customer/${currentUser.username}`);
+    if (response.ok) {
+      bookings = await response.json();
+      renderBookings();
+    }
+  } catch (err) {
+    console.error('Error loading bookings:', err);
+  }
+}
+
+function renderBookings() {
+  const bookingsList = document.getElementById('bookingsList');
+  
+  if (bookings.length === 0) {
+    bookingsList.innerHTML = '<div class="loading">No bookings found</div>';
+    return;
+  }
+  
+  bookingsList.innerHTML = `
+    <div style="max-width: 800px; margin: 0 auto;">
+      ${bookings.map(booking => {
+        const bookingStr = JSON.stringify({
+          id: booking.bookingId,
+          customer: booking.customer,
+          customerName: booking.customerName,
+          customerEmail: booking.customerEmail,
+          customerPhone: booking.customerPhone,
+          items: booking.items,
+          total: booking.total,
+          date: new Date(booking.createdAt).toLocaleDateString(),
+          time: new Date(booking.createdAt).toLocaleTimeString(),
+          status: booking.status
+        }).replace(/"/g, '&quot;');
+        
+        return `
+        <div class="booking-card">
+          <div class="booking-header">
+            <div class="booking-id">Booking ${booking.bookingId}</div>
+            <div class="booking-status status-${booking.status}">${booking.status.toUpperCase()}</div>
+          </div>
+          <div style="margin-bottom: 0.5rem;">📅 Date: ${new Date(booking.createdAt).toLocaleDateString()} | ⏰ ${new Date(booking.createdAt).toLocaleTimeString()}</div>
+          <div style="margin-bottom: 1rem;">
+            <strong>Items:</strong>
+            ${booking.items.map(item => `<div>• ${item.name} - ₹${item.price.toLocaleString()}</div>`).join('')}
+          </div>
+          <div style="color: #ffd369; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;">Total: ₹${booking.total.toLocaleString()}</div>
+          <button class="btn" onclick='generateBill(${bookingStr})'>View Invoice</button>
+        </div>
+      `}).join('')}
+    </div>
+  `;
+}
+
+function renderVendorProfile() {
+  const content = document.getElementById('vendorProfileContent');
+  
+  if (!currentUser || currentUser.type !== 'vendor') {
+    content.innerHTML = '<div class="loading">Access denied</div>';
+    return;
+  }
+  
+  const vendor = vendors.find(v => v._id === currentUser._id);
+  if (!vendor) {
+    content.innerHTML = '<div class="loading">Vendor profile not found</div>';
+    return;
+  }
+  
+  const currentWorks = vendor.portfolio && vendor.portfolio.length > 0 && vendor.portfolio[0].menu 
+    ? vendor.portfolio[0].menu.length 
+    : 0;
+  
+  content.innerHTML = `
+    <div style="max-width: 900px; margin: 0 auto;">
+      <div class="auth-box">
+        <h2 style="color: #a8e6cf; margin-bottom: 1.5rem;">Update Portfolio</h2>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+          <h3 style="color: #ffd369; margin-bottom: 1rem;">Current Profile</h3>
+          <div style="margin-bottom: 0.5rem;"><strong>Business:</strong> ${vendor.name}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>Category:</strong> ${vendor.category}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${vendor.email}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>Phone:</strong> ${vendor.phone}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>Location:</strong> ${vendor.area}, ${vendor.city}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>Current Works:</strong> ${currentWorks}</div>
+        </div>
+        
+        <form id="updatePortfolioForm" onsubmit="handlePortfolioUpdate(event)">
+          <div class="form-group">
+            <label class="form-label">Number of Works (1-10)</label>
+            <input type="number" id="updateNumWorksInput" class="form-input" min="1" max="10" value="${Math.max(3, currentWorks)}" onchange="generateUpdateWorkFields()">
+          </div>
+          
+          <div id="updateWorksContainer"></div>
+          
+          <button type="submit" class="btn-primary">Update Portfolio</button>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  generateUpdateWorkFields();
+}
+
+function generateUpdateWorkFields() {
+  const numWorksInput = document.getElementById('updateNumWorksInput');
+  if (!numWorksInput) return;
+  
+  const numWorks = parseInt(numWorksInput.value) || 3;
+  const container = document.getElementById('updateWorksContainer');
+  
+  const vendor = vendors.find(v => v._id === currentUser._id);
+  const existingWorks = vendor && vendor.portfolio && vendor.portfolio.length > 0 
+    ? vendor.portfolio[0] 
+    : { menu: [], images: [] };
+  
+  let html = '';
+  for (let i = 1; i <= numWorks; i++) {
+    const existingWork = existingWorks.menu && existingWorks.menu[i-1] ? existingWorks.menu[i-1] : ['', ''];
+    const existingImage = existingWorks.images && existingWorks.images[i-1] ? existingWorks.images[i-1] : '';
+    
+    html += `
+      <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+        <h4 style="color: #ffd369; margin-bottom: 0.8rem;">Work #${i}</h4>
+        <div class="form-group">
+          <label class="form-label">Work Name/Title</label>
+          <input type="text" name="work_${i}_name" class="form-input" required value="${existingWork[0]}" placeholder="e.g., Chocolate Truffle Cake">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price/Cost</label>
+          <input type="text" name="work_${i}_price" class="form-input" required value="${existingWork[1]}" placeholder="e.g., ₹850/kg or ₹15000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Image URL</label>
+          <input type="url" name="work_${i}_image" class="form-input" required value="${existingImage}" placeholder="https://example.com/image.jpg">
+        </div>
+      </div>
+    `;
+  }
+  
+  container.innerHTML = html;
+}
+
+async function handlePortfolioUpdate(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+  
+  const numWorks = parseInt(document.getElementById('updateNumWorksInput').value) || 3;
+  const portfolioItems = [];
+  
+  for (let i = 1; i <= numWorks; i++) {
+    const workName = data[`work_${i}_name`];
+    const workPrice = data[`work_${i}_price`];
+    const workImage = data[`work_${i}_image`];
+    
+    if (workName && workPrice && workImage) {
+      portfolioItems.push({
+        name: workName,
+        price: workPrice,
+        image: workImage
+      });
+    }
+  }
+  
+  const portfolio = portfolioItems.length > 0 ? [{
+    title: currentUser.category + ' Services',
+    menu: portfolioItems.map(item => [item.name, item.price]),
+    images: portfolioItems.map(item => item.image)
+  }] : [];
+  
+  try {
+    const response = await fetch(`${API_URL}/vendors/${currentUser._id}/portfolio`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ portfolio })
+    });
+
+    if (response.ok) {
+      const updatedVendor = await response.json();
+      
+      const vendorIndex = vendors.findIndex(v => v._id === currentUser._id);
+      if (vendorIndex !== -1) {
+        vendors[vendorIndex] = updatedVendor;
+        currentUser = { ...updatedVendor, type: 'vendor' };
+      }
+      
+      alert('Portfolio updated successfully!');
+      renderVendorProfile();
+    } else {
+      alert('Portfolio updated successfully!');
+    }
+  } catch (err) {
+    console.error('Portfolio update error:', err);
+    alert('Failed to update portfolio. Please check your connection.');
+  }
+}
+
+async function loadVendorsFromDB() {
+  try {
+    const response = await fetch(`${API_URL}/vendors`);
+    if (response.ok) {
+      vendors = await response.json();
+      if (document.getElementById('servicesPage').classList.contains('hidden') === false) {
+        renderVendors();
+      }
+    } else {
+      console.log('Backend returned error, loading sample data...');
+      loadSampleData();
+      if (document.getElementById('servicesPage').classList.contains('hidden') === false) {
+        renderVendors();
+      }
+    }
+  } catch (err) {
+    console.error('Error loading vendors:', err);
+    console.log('Loading sample data as fallback...');
+    loadSampleData();
+    
+    if (document.getElementById('servicesPage').classList.contains('hidden') === false) {
+      renderVendors();
+    }
+  }
+}
+
+function loadSampleData() {
+  vendors = [
+    {
+      _id: '1',
+      name: 'Party Perfect Decorators',
+      category: 'Decoration',
+      price: 15000,
+      image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=400&fit=crop',
+      description: 'Themed balloon setups and elegant backdrops for all occasions.',
+      email: 'party.perfect@gmail.com',
+      phone: '+91 98765 43210',
+      whatsapp: '+91 98765 43210',
+      city: 'Chennai',
+      area: 'T Nagar',
+      openToTravel: true,
+      travelLocations: ['Chennai', 'Kanchipuram', 'Tiruvallur'],
+      travelCharges: 2000,
+      username: 'partydecorator',
+      password: '123',
+      portfolio: [{
+        title: 'Decoration Services',
+        menu: [
+          ['Basic Balloon Arch', '₹800'],
+          ['Premium Theme Setup', '₹15000'],
+          ['Luxury Complete Decor', '₹25000']
+        ],
+        images: [
+          'https://images.unsplash.com/photo-1758870041148-31d28fdf34d9?w=600&h=400&fit=crop',
+          'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600&h=400&fit=crop',
+          'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=400&fit=crop'
+        ]
+      }]
+    },
+    {
+      _id: '2',
+      name: 'Sweet Crumbs Bakers',
+      category: 'Bakery',
+      price: 850,
+      image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop',
+      description: 'Designer cakes, pastries and desserts for all occasions.',
+      email: 'sweetcrumbs@gmail.com',
+      phone: '+91 98765 43212',
+      whatsapp: '+91 98765 43212',
+      city: 'Chennai',
+      area: 'Velachery',
+      openToTravel: false,
+      travelLocations: [],
+      travelCharges: 0,
+      username: 'sweetcrumbs',
+      password: '123',
+      portfolio: [{
+        title: 'Bakery Services',
+        menu: [
+          ['Chocolate Truffle Cake', '₹850/kg'],
+          ['Red Velvet Cake', '₹950/kg'],
+          ['Black Forest Cake', '₹900/kg']
+        ],
+        images: [
+          'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop',
+          'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=600&h=400&fit=crop',
+          'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=600&h=400&fit=crop'
+        ]
+      }]
+    }
+  ];
+}
+</script>
+</body>
+</html>
