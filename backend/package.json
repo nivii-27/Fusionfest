@@ -1,6 +1,10 @@
 {
   "name": "fusion-fest-backend",
   "version": "1.0.0",
+  "scripts": {
+  "start": "node server.js",
+  "build": "echo 'No build step needed'"
+}
   "description": "Backend API for Fusion Fest Event Services Platform",
   "keywords": [
     "event",
