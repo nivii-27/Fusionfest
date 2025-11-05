@@ -9,10 +9,6 @@
     "vendor",
     "management"
   ],
- " scripts": {
-  "start": "node server.js",
-  "build": "echo 'No build step needed'"
-},
   "repository": {
     "type": "git",
     "url": "fusion-fest-project"
@@ -24,6 +20,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "build": "echo 'No build step needed'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
