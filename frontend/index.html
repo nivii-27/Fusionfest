@@ -1540,7 +1540,7 @@ function viewPortfolio(vendor) {
                 <img src="${imageSrc}" alt="${menuItem[0]}" onerror="this.src='https://via.placeholder.com/250x180?text=No+Image'">
                 <div class="item-name">${menuItem[0]}</div>
                 <div class="item-price">${priceDisplay}</div>
-                <button class="btn btn-small" onclick='addToCart("${menuItem[0]}", ${priceNum}); closeModal();'>Add to Cart</button>
+                <button class="btn btn-small" onclick='addToCart("${menuItem[0]}", ${priceNum});'>Add to Cart</button>
               </div>
             `;
           }
