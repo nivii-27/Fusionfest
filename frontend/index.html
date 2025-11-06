@@ -580,6 +580,31 @@ body {
 }
 .hidden { display: none !important; }
 
+.notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  z-index: 9999;
+  animation: slideInRight 0.3s ease-out;
+  max-width: 300px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -938,6 +963,22 @@ let currentUser = null;
 let loginUserType = 'customer';
 let registerUserType = 'customer';
 let searchQuery = '';
+
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 2000);
+}
+
+// Add real-time validation listeners
 
 // Add real-time validation listeners
 document.addEventListener('DOMContentLoaded', function() {
@@ -1474,8 +1515,8 @@ function viewPortfolio(vendor) {
                 <div class="item-name">${menuItem[0]}</div>
                 <div class="item-price">${priceDisplay}</div>
                 <div style="display: flex; gap: 0.5rem;">
-                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (500g)", ${halfKgPrice}); closeModal();'>Add 500g</button>
-                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (1kg)", ${basePrice}); closeModal();'>Add 1kg</button>
+                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (500g)", ${halfKgPrice});'>Add 500g</button>
+                  <button class="btn btn-small" onclick='addToCart("${menuItem[0]} (1kg)", ${basePrice});'>Add 1kg</button>
                 </div>
               </div>
             `;
@@ -1529,9 +1570,8 @@ function closeModal() {
 function addToCart(name, price) {
   cart.push({ name, price, id: Date.now() });
   updateCart();
-  alert(`${name} added to cart!`);
+  showNotification(`${name} added to cart!`);
 }
-
 function updateCart() {
   const count = cart.length;
   const total = cart.reduce((sum, item) => sum + item.price, 0);
