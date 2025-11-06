@@ -212,6 +212,7 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
+  
 .form-input, .form-select, .form-textarea {
   width: 100%;
   background: rgba(255,255,255,0.05);
@@ -222,6 +223,16 @@ body {
   font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   transition: all 0.3s;
+}
+
+.form-select option {
+  background: #1a1f3a;
+  color: #fff;
+  padding: 0.5rem;
+}
+
+.form-select option:hover {
+  background: #667eea;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   outline: none;
@@ -789,6 +800,7 @@ body {
           <option value="Entertainment">Entertainment</option>
           <option value="Mehendi">Mehendi Artist</option>
           <option value="Venue">Venue</option>
+          <option value="Others">Others</option>
         </select>
       </div>
       <div class="form-group">
@@ -1419,7 +1431,9 @@ function filterCategory(category) {
 
 function renderVendors() {
   const grid = document.getElementById('vendorGrid');
-  let filtered = currentCategory === 'all' ? vendors : vendors.filter(v => v.category === currentCategory);
+  let filtered = currentCategory === 'all' 
+    ? vendors 
+    : vendors.filter(v => v.category === currentCategory || (currentCategory === 'all' && v.category === 'Others'));
   
   if (searchQuery) {
     filtered = filtered.filter(v => 
@@ -1559,8 +1573,7 @@ function addAllMenuToCart(vendor, portfolioIndex) {
   });
   
   updateCart();
-  alert(`All ${addedCount} items added to cart!`);
-  closeModal();
+  showNotification(`All ${addedCount} items added to cart!`);
 }
 
 function closeModal() {
