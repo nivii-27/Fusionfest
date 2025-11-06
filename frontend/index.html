@@ -1648,6 +1648,11 @@ function renderPaymentPage() {
   const content = document.getElementById('paymentContent');
   const total = cart.reduce((sum, item) => sum + item.price, 0);
   
+  // Get tomorrow's date as minimum date
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
+  
   content.innerHTML = `
     <div style="max-width: 600px; margin: 0 auto;">
       <div class="booking-card">
@@ -1665,20 +1670,38 @@ function renderPaymentPage() {
       </div>
       
       <div class="booking-card">
-        <h3 style="color: #a8e6cf; margin-bottom: 1.5rem;">Payment Details</h3>
+        <h3 style="color: #a8e6cf; margin-bottom: 1.5rem;">Event Details</h3>
         <form id="paymentForm" onsubmit="processPayment(event)">
           <div class="form-group">
+            <label class="form-label">Event Date *</label>
+            <input type="date" name="eventDate" class="form-input" min="${minDate}" required style="color-scheme: dark;">
+            <small style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Event must be scheduled at least 1 day in advance</small>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Event Address/Venue *</label>
+            <textarea name="eventAddress" class="form-textarea" required placeholder="Enter complete address where services will be delivered" style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Special Instructions (Optional)</label>
+            <textarea name="specialInstructions" class="form-textarea" placeholder="Any special requirements or notes for vendors..." style="min-height: 60px;"></textarea>
+          </div>
+          
+          <h3 style="color: #a8e6cf; margin: 2rem 0 1.5rem 0; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 2rem;">Payment Details</h3>
+          
+          <div class="form-group">
             <label class="form-label">Card Number</label>
-            <input type="text" class="card-input" placeholder="1234567890123456" pattern="[0-9]{16}" maxlength="16" required>
+            <input type="text" name="cardNumber" class="card-input" placeholder="1234 5678 9012 3456" pattern="[0-9]{16}" maxlength="16" required>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Expiry Date</label>
-              <input type="text" class="card-input" placeholder="MM/YY" pattern="[0-1]{1}[1-2]{1}/[0-9]{2}" maxlength="5" required>
+              <input type="text" name="expiryDate" class="card-input" placeholder="MM/YY" pattern="[0-9]{2}/[0-9]{2}" maxlength="5" required>
             </div>
             <div class="form-group">
               <label class="form-label">CVV</label>
-              <input type="text" class="card-input" placeholder="123" pattern="[0-9]{3}" maxlength="3" required>
+              <input type="text" name="cvv" class="card-input" placeholder="123" pattern="[0-9]{3}" maxlength="3" required>
             </div>
           </div>
           <button type="submit" class="btn-primary">Pay ₹${total.toLocaleString()}</button>
@@ -1691,6 +1714,12 @@ function renderPaymentPage() {
 async function processPayment(e) {
   e.preventDefault();
   
+  const form = e.target;
+  const formData = new FormData(form);
+  const eventDate = formData.get('eventDate');
+  const eventAddress = formData.get('eventAddress');
+  const specialInstructions = formData.get('specialInstructions');
+  
   const booking = {
     bookingId: 'BK' + Date.now(),
     customer: currentUser.username,
@@ -1699,6 +1728,9 @@ async function processPayment(e) {
     customerPhone: currentUser.phone,
     items: [...cart],
     total: cart.reduce((sum, item) => sum + item.price, 0),
+    eventDate: eventDate,
+    eventAddress: eventAddress.trim(),
+    specialInstructions: specialInstructions ? specialInstructions.trim() : '',
     status: 'pending'
   };
   
@@ -1728,7 +1760,6 @@ async function processPayment(e) {
     alert('Booking failed. Please check your connection.');
   }
 }
-
 function generateBill(booking) {
   const billHTML = `
     <div style="max-width: 700px; margin: 0 auto; background: white; color: black; padding: 3rem; border-radius: 10px;">
@@ -1739,20 +1770,31 @@ function generateBill(booking) {
       </div>
       
       <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-        <h2 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">INVOICE</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div>
-            <p style="margin-bottom: 0.5rem;"><strong>Booking ID:</strong> ${booking.id}</p>
-            <p style="margin-bottom: 0.5rem;"><strong>Date:</strong> ${booking.date}</p>
-            <p style="margin-bottom: 0.5rem;"><strong>Time:</strong> ${booking.time}</p>
-          </div>
-          <div>
-            <p style="margin-bottom: 0.5rem;"><strong>Customer:</strong> ${booking.customerName}</p>
-            <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${booking.customerEmail}</p>
-            <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> ${booking.customerPhone}</p>
-          </div>
-        </div>
-      </div>
+  <h2 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">INVOICE</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div>
+      <p style="margin-bottom: 0.5rem;"><strong>Booking ID:</strong> ${booking.id}</p>
+      <p style="margin-bottom: 0.5rem;"><strong>Booking Date:</strong> ${booking.date}</p>
+      <p style="margin-bottom: 0.5rem;"><strong>Time:</strong> ${booking.time}</p>
+      ${booking.eventDate ? `<p style="margin-bottom: 0.5rem;"><strong>Event Date:</strong> ${new Date(booking.eventDate).toLocaleDateString()}</p>` : ''}
+    </div>
+    <div>
+      <p style="margin-bottom: 0.5rem;"><strong>Customer:</strong> ${booking.customerName}</p>
+      <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${booking.customerEmail}</p>
+      <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> ${booking.customerPhone}</p>
+    </div>
+  </div>
+  ${booking.eventAddress ? `
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+      <p style="margin-bottom: 0.5rem;"><strong>Event Venue:</strong></p>
+      <p style="color: #666;">${booking.eventAddress}</p>
+      ${booking.specialInstructions ? `
+        <p style="margin-top: 0.5rem;"><strong>Special Instructions:</strong></p>
+        <p style="color: #666;">${booking.specialInstructions}</p>
+      ` : ''}
+    </div>
+  ` : ''}
+</div>
       
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
         <thead>
@@ -1946,7 +1988,9 @@ function renderBookings() {
             <div class="booking-id">Booking ${booking.bookingId}</div>
             <div class="booking-status status-${booking.status}">${booking.status.toUpperCase()}</div>
           </div>
-          <div style="margin-bottom: 0.5rem;">📅 Date: ${new Date(booking.createdAt).toLocaleDateString()} | ⏰ ${new Date(booking.createdAt).toLocaleTimeString()}</div>
+          <div style="margin-bottom: 0.5rem;">📅 Booking Date: ${new Date(booking.createdAt).toLocaleDateString()} | ⏰ ${new Date(booking.createdAt).toLocaleTimeString()}</div>
+            ${booking.eventDate ? `<div style="margin-bottom: 0.5rem;">🎉 Event Date: ${new Date(booking.eventDate).toLocaleDateString()}</div>` : ''}
+            ${booking.eventAddress ? `<div style="margin-bottom: 0.5rem;">📍 Venue: ${booking.eventAddress}</div>` : ''}
           <div style="margin-bottom: 1rem;">
             <strong>Items:</strong>
             ${booking.items.map(item => `<div>• ${item.name} - ₹${item.price.toLocaleString()}</div>`).join('')}
